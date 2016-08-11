@@ -13,8 +13,8 @@
 {
     GPUImageBilateralFilter *bilateralFilter; //双边模糊
     GPUImageCannyEdgeDetectionFilter *cannyEdgeFilter;//Canny边缘检测算法
-    GPUImageCombinationFilter *combinationFilter;
     GPUImageHSBFilter *hsbFilter;//HSB颜色滤镜
+    GPUImageCombinationFilter *combinationFilter;//滤镜的组合
 }
 
 @end

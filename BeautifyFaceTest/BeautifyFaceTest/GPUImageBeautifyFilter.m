@@ -7,7 +7,7 @@
 //
 
 #import "GPUImageBeautifyFilter.h"
-
+/***************************************************/
 // Internal CombinationFilter(It should not be used outside)
 @interface GPUImageCombinationFilter : GPUImageThreeInputFilter//三输入的滤波器
 {
@@ -17,7 +17,8 @@
 @property (nonatomic, assign) CGFloat intensity;
 
 @end
-
+//Shader着色器
+//Shader出现在OpenGL ES 2.0中，允许创建自己的Shader。必须同时创建两个Shader，分别是Vertex shader和Fragment shader.http://www.jianshu.com/p/8687a040eb48
 NSString *const kGPUImageBeautifyFragmentShaderString = SHADER_STRING
 (
  varying highp vec2 textureCoordinate;
@@ -121,3 +122,36 @@ NSString *const kGPUImageBeautifyFragmentShaderString = SHADER_STRING
     }
 }
 @end
+
+/*
+ 1、GPUImageVideoCamera捕获摄像头图像
+ 调用newFrameReadyAtTime: atIndex:通知GPUImageBeautifyFilter；
+ 
+ 2、GPUImageBeautifyFilter调用newFrameReadyAtTime: atIndex:
+ 通知GPUImageBilateralFliter输入纹理已经准备好；
+ 
+ 3、GPUImageBilateralFliter 绘制图像后在informTargetsAboutNewFrameAtTime()，
+ 调用setInputFramebufferForTarget: atIndex:
+ 把绘制的图像设置为GPUImageCombinationFilter输入纹理，
+ 并通知GPUImageCombinationFilter纹理已经绘制完毕；
+ 
+ 4、GPUImageBeautifyFilter调用newFrameReadyAtTime: atIndex:
+ 通知 GPUImageCannyEdgeDetectionFilter输入纹理已经准备好；
+ 
+ 5、同3，GPUImageCannyEdgeDetectionFilter 绘制图像后，
+ 把图像设置为GPUImageCombinationFilter输入纹理；
+ 
+ 6、GPUImageBeautifyFilter调用newFrameReadyAtTime: atIndex:
+ 通知 GPUImageCombinationFilter输入纹理已经准备好；
+ 
+ 7、GPUImageCombinationFilter判断是否有三个纹理，三个纹理都已经准备好后
+ 调用GPUImageThreeInputFilter的绘制函数renderToTextureWithVertices: textureCoordinates:，
+ 图像绘制完后，把图像设置为GPUImageHSBFilter的输入纹理,
+ 通知GPUImageHSBFilter纹理已经绘制完毕；
+ 
+ 8、GPUImageHSBFilter调用renderToTextureWithVertices: textureCoordinates:绘制图像，
+ 完成后把图像设置为GPUImageView的输入纹理，并通知GPUImageView输入纹理已经绘制完毕；
+ 
+ 9、GPUImageView把输入纹理绘制到自己的帧缓存，然后通过
+ [self.context presentRenderbuffer:GL_RENDERBUFFER];显示到UIView上。
+ */
