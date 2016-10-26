@@ -3,18 +3,18 @@
 //  BeautifyFaceTest
 //
 //  Created by Mac on 16/8/9.
-//  Copyright © 2016年 bairuitech. All rights reserved.
+//  Copyright © 2016年 . All rights reserved.
 //
 
 #import <GPUImage/GPUImage.h>
 @class GPUImageCombinationFilter;
-@interface GPUImageBeautifyFilter : GPUImageFilterGroup
-//Combination  Filter是我们自己定义的三输入的滤波器。三个输入分别是原图像A(x, y),双边滤波后的图像B(x, y），边缘图像C(x, y)。其中A,B,C可以看成是图像矩阵，(x,y)可以看成其中某一像素的坐标。
+@interface GPUImageBeautifyFilter : GPUImageFilterGroup //继承于图像滤镜组
+
 {
-    GPUImageBilateralFilter *bilateralFilter; //双边模糊
-    GPUImageCannyEdgeDetectionFilter *cannyEdgeFilter;//Canny边缘检测算法
-    GPUImageHSBFilter *hsbFilter;//HSB颜色滤镜
-    GPUImageCombinationFilter *combinationFilter;//滤镜的组合
+    GPUImageBilateralFilter *bilateralFilter; //双边模糊(磨皮)滤镜--继承于高斯模糊滤镜GPUImageGaussianBlurFilter
+    GPUImageCannyEdgeDetectionFilter *cannyEdgeFilter;//Canny边缘检测算法滤镜--继承于图像滤镜组GPUImageFilterGroup
+    GPUImageHSBFilter *hsbFilter;//HSB颜色滤镜--继承于颜色矩阵滤镜GPUImageColorMatrixFilter
+    GPUImageCombinationFilter *combinationFilter;//滤镜的组合---继承于三输入滤镜GPUImageThreeInputFilter
 }
 
 @end

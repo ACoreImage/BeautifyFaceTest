@@ -3,7 +3,7 @@
 //  BeautifyFaceTest
 //
 //  Created by Mac on 16/8/9.
-//  Copyright © 2016年 bairuitech. All rights reserved.
+//  Copyright © 2016年 . All rights reserved.
 //
 
 #import "AppDelegate.h"
